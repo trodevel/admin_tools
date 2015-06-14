@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# $Revision: 1789 $ $Date:: 2015-05-30 #$ $Author: serge $
+# $Revision: 1860 $ $Date:: 2015-06-14 #$ $Author: serge $
 
 PATH_BIN=$1
+NAME=$2
 
 if [ -z "$PATH_BIN" ]
 then
@@ -10,7 +11,11 @@ then
     exit
 fi
 
-NAME=$( basename "${PATH_BIN}" )
+if [ -z "$NAME" ]
+then
+    NAME=$( basename "${PATH_BIN}" )
+fi
+
 DIR=$( dirname "${PATH_BIN}" )
 
 #echo NAME=$NAME
@@ -26,7 +31,7 @@ APP=$( ps -A | grep -w $NAME )
 if ! [ -n "$APP" ]
 then
     STAMP=$( date --utc +%FT%TZ )
-    echo "$STAMP no binary is running, restarting" >$LOG
+    echo "$STAMP no binary is running, restarting" >>$LOG
     $PATH_BIN 2>$STDERR >$STDOUT
     exit
 fi
